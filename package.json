@@ -1,6 +1,6 @@
 {
   "name": "hubot-quay",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Hubot support for Quay.io",
   "main": "index.coffee",
   "scripts": {
