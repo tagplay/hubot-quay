@@ -31,23 +31,21 @@ module.exports = (robot) ->
 		envelope.user.room = envelope.room = quay_room if quay_room
 		envelope.user.room = envelope.room = query.room if query.room
 		envelope.user.type = query.type or 'groupchat'
-
 		body = req.body
-		console.log(req.body)
 
 		message = "Got a quay webhook that I didn't understand"
 		if body.updated_tags
-			message = "Successfully pushed to [body.repository](http://#{body.docker_url}) the tags: #{Object.keys(body.updated_tags).join(', ')}"
+			message = "Successfully pushed to [#{body.repository}](http://#{body.docker_url}) the tags: #{Object.keys(body.updated_tags).join(', ')}"
 		else if body.is_manual != undefined
-			message = "Dockerfile build queued for [body.repository](http://#{body.docker_url})#(#{body.docker_tags.join(', ')})"
+			message = "Dockerfile build queued for [#{body.repository}](http://#{body.docker_url})#(#{body.docker_tags.join(', ')})"
 		else if body.error_message
-			message = "Build failed [body.repository](http://#{body.docker_url}): #{body.error_message}"
+			message = "Build failed [#{body.repository}](http://#{body.docker_url}): #{body.error_message}"
 			delete building[body.build_id]
 		else if body.build_id && !building[body.build_id]
-			message = "Dockerfile build started for [body.repository](http://#{body.docker_url})#(#{body.docker_tags.join(', ')})"
+			message = "Dockerfile build started for [#{body.repository}](http://#{body.docker_url})#(#{body.docker_tags.join(', ')})"
 			building[body.build_id] = true
 		else if body.build_id && building[body.build_id]
-			message = "Dockerfile build completed for [body.repository](http://#{body.docker_url})#(#{body.docker_tags.join(', ')})"
+			message = "Dockerfile build completed for [#{body.repository}](http://#{body.docker_url})#(#{body.docker_tags.join(', ')})"
 			delete building[body.build_id]
 
 		robot.send envelope, message
